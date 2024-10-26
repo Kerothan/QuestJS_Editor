@@ -1,13 +1,27 @@
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, filedialog
+from parser.parser import Jsparser
 
 class MainApplication(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
         
+        def open_file_dialog():
+            file_path = filedialog.askopenfilename(title="Open File", filetypes=[("All Files", "*.*")])
+            if file_path:
+                parser = Jsparser()
+                parsed = parser.jsparse(file_path)
+                ent1.delete(0,END)
+                ent1.insert(0,parsed)
+
         def clicked():
             btn2.configure(text="OMG! YOU CLICKED ME!!! " + ent1.get())
+
+        def openFile():
+            ent1.delete(0,END)
+            ent1.insert(0,"Open file?!")
+            btn2.configure(text="Open a file you say?")
 
         # Frame 1 definition
         hierarchyFrame = Frame(parent, padx=10, pady = 10)
@@ -20,7 +34,7 @@ class MainApplication(Frame):
         menu = Menu(parent)
         item = Menu(menu, tearoff=False)
         item.add_command(label='New')
-        item.add_command(label='Open')
+        item.add_command(label='Open', command=open_file_dialog)
         item.add_command(label='Close',command=parent.destroy)
         menu.add_cascade(label='File', menu=item)
         parent.config(menu=menu)
